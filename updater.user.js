@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BladeUp Customizer
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  Изменяет секцию VIP, применяет изменения на кнопках и ролях только если активирована кастомная тема "Customed by ImInsane"
 // @match        *://bladeup.pw/*
 // @grant        none
@@ -36,16 +36,6 @@
         }
     }
 
-    // ------------------------- Применение тёмной темы -------------------------
-    const darkThemeColors = {
-        '--accent-color': '#303030',
-        '--hover-button': '#808080',
-        '--hover-bledni': '#00000030',
-        '--defoult-mmenu': '#0f0f0f',
-        '--msg-ss': '#1a1a1a',
-        '--body': '#0d0d0d'
-    };
-
     // ------------------------- Замена ролей пользователей -------------------------
     function modifyMemberRoles() {
         const memberRoles = document.querySelectorAll('.member-role');
@@ -68,7 +58,7 @@
         });
     }
 
-        // Добавление нового варианта в селектор цвета (это нужно только на странице интерфейса)
+    // Добавление нового варианта в селектор цвета (это нужно только на странице интерфейса)
     function addCustomColorScheme() {
         const colorSchemeSelector = document.getElementById('colorSchemeSelector');
         if (colorSchemeSelector) {
@@ -81,26 +71,29 @@
 
     // Применение кастомной темы
     function applyCustomTheme(selectedOption) {
+        const root = document.documentElement;
+        
         if (selectedOption === 'customedByImInsane') {
             // Применяем кастомные цвета
             const darkThemeColors = {
-                '--accent-color': '#303030', // Пример для кастомного акцента
-                '--hover-button': '#808080', // Пример для белых кнопок
-                '--hover-bledni': '#00000030', // Полупрозрачный чёрный
-                '--defoult-mmenu': '#0f0f0f', // Очень тёмный оттенок для меню
-                '--msg-ss': '#1a1a1a',        // Тёмный цвет для сообщений
-                '--body': '#0d0d0d'           // Тёмный цвет фона
+                '--accent-color': '#303030',
+                '--hover-button': '#808080',
+                '--hover-bledni': '#00000030',
+                '--defoult-mmenu': '#0f0f0f',
+                '--msg-ss': '#1a1a1a',
+                '--body': '#0d0d0d'
             };
-            const root = document.documentElement;
             for (let [variable, color] of Object.entries(darkThemeColors)) {
                 root.style.setProperty(variable, color);
             }
         } else {
-            // Возвращаем стандартные цвета или другие цвета, если нужно
-            const root = document.documentElement;
-            root.style.setProperty('--accent-color', ''); // Применим дефолтный акцент
-            root.style.setProperty('--hover-button', ''); // Применим дефолтный цвет кнопок
-            // Остальные стандартные стили
+            // Если выбрана не кастомная тема, сбрасываем эти стили
+            root.style.setProperty('--accent-color', ''); 
+            root.style.setProperty('--hover-button', ''); 
+            root.style.setProperty('--hover-bledni', ''); 
+            root.style.setProperty('--defoult-mmenu', ''); 
+            root.style.setProperty('--msg-ss', ''); 
+            root.style.setProperty('--body', '');
         }
     }
 
@@ -142,28 +135,16 @@
     // ------------------------- Применение изменений -------------------------
     modifyVipSection();
     modifyVipButton();
-    loadSavedTheme();
     modifyMemberRoles();
     modifyKickButton();
-
-    // Если находимся на странице /clan/*
-    if (window.location.pathname.startsWith('/clan/')) {
-        const root = document.documentElement;
-        root.style.setProperty('--accent-color', '#505050');
-    }
 
     // Следим за изменениями в DOM
     const observer = new MutationObserver(() => {
         modifyVipSection();
         modifyVipButton();
-        loadSavedTheme();
         modifyMemberRoles();
         modifyKickButton();
-
-        if (window.location.pathname.startsWith('/clan/')) {
-            const root = document.documentElement;
-            root.style.setProperty('--accent-color', '#505050');
-        }
     });
     observer.observe(document.body, { childList: true, subtree: true });
 })();
+
