@@ -6,5 +6,5 @@
 // @match        *://bladeup.pw/*
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/ImInsane1337/BladeUpcsriptos/refs/heads/main/updater.meta.js
-// @downloadURL  https://example.com/your_script.user.js
+// @downloadURL  https://raw.githubusercontent.com/ImInsane1337/BladeUpcsriptos/refs/heads/main/updater.user.js
 // ==/UserScript==
