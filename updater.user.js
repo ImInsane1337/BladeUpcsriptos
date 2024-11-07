@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BladeUp Customizer
 // @namespace    http://tampermonkey.net/
-// @version      1.2
+// @version      1.3
 // @description  Изменяет секцию VIP, применяет изменения на кнопках и ролях только если активирована кастомная тема "Customed by ImInsane"
 // @match        *://bladeup.pw/*
 // @grant        none
