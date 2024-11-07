@@ -5,6 +5,8 @@
 // @description  Изменяет секцию VIP, применяет изменения на кнопках и ролях только если активирована кастомная тема "Customed by ImInsane"
 // @match        *://bladeup.pw/*
 // @grant        none
+// @updateURL    https://raw.githubusercontent.com/ImInsane1337/BladeUpcsriptos/main/updater.meta.js
+// @downloadURL  https://raw.githubusercontent.com/ImInsane1337/BladeUpcsriptos/main/updater.user.js
 // ==/UserScript==
 
 (function() {
