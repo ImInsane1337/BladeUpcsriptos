@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BladeUp Customizer
 // @namespace    http://tampermonkey.net/
-// @version      1.5
+// @version      1.6
 // @description  Изменяет секцию VIP, применяет изменения на кнопках и ролях только если активирована кастомная тема "Customed by ImInsane"
 // @match        *://bladeup.pw/*
 // @grant        none
@@ -11,52 +11,6 @@
 
 (function() {
     'use strict';
-
-    // ------------------------- Изменение VIP секции и кнопки -------------------------
-    function modifyVipSection() {
-        const vipFeatures = document.querySelectorAll('.vip-feature');
-        if (vipFeatures.length > 0) {
-            vipFeatures[0].textContent = 't.me/insane_ru';
-            for (let i = 1; i < vipFeatures.length; i++) {
-                vipFeatures[i].remove();
-            }
-        }
-
-        const vipTitle = document.querySelector('.vip-title');
-        if (vipTitle) {
-            vipTitle.innerHTML = '<i class="fas fa-crown"></i> Custom';
-        }
-    }
-
-    function modifyVipButton() {
-        const vipButton = document.getElementById('buyVip');
-        if (vipButton) {
-            vipButton.setAttribute('onclick', "window.open('https://t.me/insane_ru', '_blank')");
-            vipButton.textContent = 'My Telegram';
-        }
-    }
-
-    // ------------------------- Замена ролей пользователей -------------------------
-    function modifyMemberRoles() {
-        const memberRoles = document.querySelectorAll('.member-role');
-        memberRoles.forEach(role => {
-            if (role.textContent === 'Owner') {
-                role.textContent = 'Владелец';
-            } else if (role.textContent === 'Member') {
-                role.textContent = 'Участник';
-            }
-        });
-    }
-
-    // ------------------------- Замена текста на кнопке "Выкинуть" -------------------------
-    function modifyKickButton() {
-        const kickButtons = document.querySelectorAll('.kick-member.kick');
-        kickButtons.forEach(button => {
-            if (button.textContent === 'Выкинуть') {
-                button.textContent = 'Кикнуть';
-            }
-        });
-    }
 
     // Добавление нового варианта в селектор цвета (это нужно только на странице интерфейса)
     function addCustomColorScheme() {
@@ -71,29 +25,26 @@
 
     // Применение кастомной темы
     function applyCustomTheme(selectedOption) {
-        const root = document.documentElement;
-        
         if (selectedOption === 'customedByImInsane') {
             // Применяем кастомные цвета
             const darkThemeColors = {
-                '--accent-color': '#303030',
-                '--hover-button': '#808080',
-                '--hover-bledni': '#00000030',
-                '--defoult-mmenu': '#0f0f0f',
-                '--msg-ss': '#1a1a1a',
-                '--body': '#0d0d0d'
+                '--accent-color': '#303030', // Пример для кастомного акцента
+                '--hover-button': '#808080', // Пример для белых кнопок
+                '--hover-bledni': '#00000030', // Полупрозрачный чёрный
+                '--defoult-mmenu': '#0f0f0f', // Очень тёмный оттенок для меню
+                '--msg-ss': '#1a1a1a',        // Тёмный цвет для сообщений
+                '--body': '#0d0d0d'           // Тёмный цвет фона
             };
+            const root = document.documentElement;
             for (let [variable, color] of Object.entries(darkThemeColors)) {
                 root.style.setProperty(variable, color);
             }
         } else {
-            // Если выбрана не кастомная тема, сбрасываем эти стили
-            root.style.setProperty('--accent-color', ''); 
-            root.style.setProperty('--hover-button', ''); 
-            root.style.setProperty('--hover-bledni', ''); 
-            root.style.setProperty('--defoult-mmenu', ''); 
-            root.style.setProperty('--msg-ss', ''); 
-            root.style.setProperty('--body', '');
+            // Возвращаем стандартные цвета или другие цвета, если нужно
+            const root = document.documentElement;
+            root.style.setProperty('--accent-color', ''); // Применим дефолтный акцент
+            root.style.setProperty('--hover-button', ''); // Применим дефолтный цвет кнопок
+            // Остальные стандартные стили
         }
     }
 
@@ -119,7 +70,7 @@
         colorSchemeSelector.addEventListener('change', function() {
             const selectedOption = colorSchemeSelector.value;
             saveSelectedTheme(selectedOption); // Сохраняем выбранную тему
-            applyCustomTheme(selectedOption); // Применяем выбранную тему
+            applyCustomTheme(selectedOption);  // Применяем выбранную тему
         });
 
         // Добавляем кастомную тему в селектор только на странице интерфейса
@@ -132,19 +83,6 @@
         }
     }
 
-    // ------------------------- Применение изменений -------------------------
-    modifyVipSection();
-    modifyVipButton();
-    modifyMemberRoles();
-    modifyKickButton();
-
-    // Следим за изменениями в DOM
-    const observer = new MutationObserver(() => {
-        modifyVipSection();
-        modifyVipButton();
-        modifyMemberRoles();
-        modifyKickButton();
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+    // Применяем сохранённую тему на всех страницах при загрузке
+    loadSavedTheme();
 })();
-
